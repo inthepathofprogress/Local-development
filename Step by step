@@ -138,7 +138,532 @@ Postgresql installation
 https://www.postgresql.org/download/windows/
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
 installed postgres given username and password and port default 5432
+Create the Required Databases
+Your microservices expect separate databases for proper data isolation. You can create them easily right inside pgAdmin:
+In the left sidebar, click the arrow next to PostgreSQL 18 to expand it.   
+Right-click on Databases (or the server itself) -> select Create -> Database...   Name your database (e.g., user_db) and click Save.
+Repeat this process to create the other databases your services need:product_dborder_dbpayment_db
+(Note: The cart_db is optional since you are using Redis for cart caching, but you can create one if needed).
 
+
+Install redis 
+https://github.com/redis/redis/releases#release-8.10.3
+go to C:\Program Files\Redis> and run redis-cli ping if prompted pong then its up and running and listening
+C:\Program Files\Redis>redis-cli ping
+PONG
+
+Go to service registry
+C:\Program Files\Redis>cd C:\Users\username\suvida_potato\service-registry
+C:\Users\username\suvida_potato\service-registry$ mvn spring-boot:run
+http://localhost:8761
+the page is loaded up and running and says no instances available so lets start serives and start with the entry point which is api gateway
+
+PS C:\Users\user> cd C:\Users\username\suvida_potato\api-gateway
+PS C:\Users\username\suvida_potato\api-gateway> mvn spring-boot:run
+
+after running got port 8080 is already in listening so to check kill use the below commands:
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16.497 s
+[INFO] Finished at: 2026-10-28T21:56:59+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.1.5:run (default-cli) on project api-gateway: Process terminated with exit code: 1 -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+PS C:\Users\Sudheer\suvida_potato\api-gateway> netstat -ano | findstr :8080
+  TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       24928
+PS C:\Users\Sudheer\suvida_potato\api-gateway> taskkill /F /PID 24928
+ERROR: The process with PID 24928 could not be terminated.
+Reason: Access is denied.
+netstat -ano | findstr :8080
+taskkill /F /PID 24928
+PS C:\Users\username\suvida_potato\api-gateway> mvn spring-boot:run
+and check eureka you can see api gateway
+
+Continue with other micro services
+user-service
+PS C:\Users\Sudheer> cd C:\Users\Sudheer\suvida_potato\user-service
+PS C:\Users\Sudheer\suvida_potato\user-service> mvn spring-boot:run
+got compilation error
+[ERROR] COMPILATION ERROR :
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[38,13] cannot find symbol
+  symbol:   method setEmail(java.lang.String)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[39,13] cannot find symbol
+  symbol:   method setPassword(java.lang.String)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[40,13] cannot find symbol
+  symbol:   method setFirstName(java.lang.String)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[41,13] cannot find symbol
+  symbol:   method setLastName(java.lang.String)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[42,13] cannot find symbol
+  symbol:   method setRole(com.suvida.userservice.model.User.Role)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[43,13] cannot find symbol
+  symbol:   method setActive(boolean)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[44,13] cannot find symbol
+  symbol:   method setCreatedAt(java.time.LocalDateTime)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[45,13] cannot find symbol
+  symbol:   method setUpdatedAt(java.time.LocalDateTime)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[25,49] cannot find symbol
+  symbol:   method getEmail()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[30,30] cannot find symbol
+  symbol:   method getEmail()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[31,56] cannot find symbol
+  symbol:   method getPassword()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[32,34] cannot find symbol
+  symbol:   method getFirstName()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[33,33] cannot find symbol
+  symbol:   method getLastName()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[34,30] cannot find symbol
+  symbol:   method getPhone()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[35,32] cannot find symbol
+  symbol:   method getAddress()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[36,29] cannot find symbol
+  symbol:   method getCity()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[37,30] cannot find symbol
+  symbol:   method getState()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[38,32] cannot find symbol
+  symbol:   method getZipCode()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[39,32] cannot find symbol
+  symbol:   method getCountry()
+  location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[40,13] cannot find symbol
+  symbol:   method setRole(com.suvida.userservice.model.User.Role)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[41,13] cannot find symbol
+  symbol:   method setActive(boolean)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[42,13] cannot find symbol
+  symbol:   method setCreatedAt(java.time.LocalDateTime)
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[47,26] cannot find symbol
+  symbol:   method getEmail()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[48,26] cannot find symbol
+  symbol:   method getId()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[49,26] cannot find symbol
+  symbol:   method getRole()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[54,26] cannot find symbol
+  symbol:   method getId()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[55,26] cannot find symbol
+  symbol:   method getEmail()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[56,26] cannot find symbol
+  symbol:   method getFirstName()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[57,26] cannot find symbol
+  symbol:   method getLastName()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[58,26] cannot find symbol
+  symbol:   method getRole()
+  location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[63,55] cannot find symbol
+  symbol:   method getEmail()
+  location: variable request of type com.suvida.userservice.dto.LoginRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[66,45] cannot find symbol
+  symbol:   method getPassword()
+  location: variable request of type com.suvida.userservice.dto.LoginRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[66,65] cannot find symbol
+  symbol:   method getPassword()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[70,18] cannot find symbol
+  symbol:   method getActive()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[75,21] cannot find symbol
+  symbol:   method getEmail()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[76,21] cannot find symbol
+  symbol:   method getId()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[77,21] cannot find symbol
+  symbol:   method getRole()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[82,21] cannot find symbol
+  symbol:   method getId()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[83,21] cannot find symbol
+  symbol:   method getEmail()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[84,21] cannot find symbol
+  symbol:   method getFirstName()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[85,21] cannot find symbol
+  symbol:   method getLastName()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[86,21] cannot find symbol
+  symbol:   method getRole()
+  location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[97,38] cannot find symbol
+  symbol:   method getFirstName()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[98,37] cannot find symbol
+  symbol:   method getLastName()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[99,34] cannot find symbol
+  symbol:   method getPhone()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[100,36] cannot find symbol
+  symbol:   method getAddress()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[101,33] cannot find symbol
+  symbol:   method getCity()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[102,34] cannot find symbol
+  symbol:   method getState()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[103,36] cannot find symbol
+  symbol:   method getZipCode()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[104,36] cannot find symbol
+  symbol:   method getCountry()
+  location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[105,13] cannot find symbol
+  symbol:   method setUpdatedAt(java.time.LocalDateTime)
+  location: variable user of type com.suvida.userservice.model.User
+[INFO] 51 errors
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.128 s
+[INFO] Finished at: 2026-10-28T22:06:14+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project user-service: Compilation failure: Compilation failure:
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[38,13] cannot find symbol
+[ERROR]   symbol:   method setEmail(java.lang.String)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[39,13] cannot find symbol
+[ERROR]   symbol:   method setPassword(java.lang.String)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[40,13] cannot find symbol
+[ERROR]   symbol:   method setFirstName(java.lang.String)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[41,13] cannot find symbol
+[ERROR]   symbol:   method setLastName(java.lang.String)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[42,13] cannot find symbol
+[ERROR]   symbol:   method setRole(com.suvida.userservice.model.User.Role)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[43,13] cannot find symbol
+[ERROR]   symbol:   method setActive(boolean)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[44,13] cannot find symbol
+[ERROR]   symbol:   method setCreatedAt(java.time.LocalDateTime)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/seeder/UserDataSeeder.java:[45,13] cannot find symbol
+[ERROR]   symbol:   method setUpdatedAt(java.time.LocalDateTime)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[25,49] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[30,30] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[31,56] cannot find symbol
+[ERROR]   symbol:   method getPassword()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[32,34] cannot find symbol
+[ERROR]   symbol:   method getFirstName()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[33,33] cannot find symbol
+[ERROR]   symbol:   method getLastName()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[34,30] cannot find symbol
+[ERROR]   symbol:   method getPhone()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[35,32] cannot find symbol
+[ERROR]   symbol:   method getAddress()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[36,29] cannot find symbol
+[ERROR]   symbol:   method getCity()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[37,30] cannot find symbol
+[ERROR]   symbol:   method getState()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[38,32] cannot find symbol
+[ERROR]   symbol:   method getZipCode()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[39,32] cannot find symbol
+[ERROR]   symbol:   method getCountry()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.RegisterRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[40,13] cannot find symbol
+[ERROR]   symbol:   method setRole(com.suvida.userservice.model.User.Role)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[41,13] cannot find symbol
+[ERROR]   symbol:   method setActive(boolean)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[42,13] cannot find symbol
+[ERROR]   symbol:   method setCreatedAt(java.time.LocalDateTime)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[47,26] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[48,26] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[49,26] cannot find symbol
+[ERROR]   symbol:   method getRole()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[54,26] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[55,26] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[56,26] cannot find symbol
+[ERROR]   symbol:   method getFirstName()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[57,26] cannot find symbol
+[ERROR]   symbol:   method getLastName()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[58,26] cannot find symbol
+[ERROR]   symbol:   method getRole()
+[ERROR]   location: variable savedUser of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[63,55] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.LoginRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[66,45] cannot find symbol
+[ERROR]   symbol:   method getPassword()
+[ERROR]   location: variable request of type com.suvida.userservice.dto.LoginRequest
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[66,65] cannot find symbol
+[ERROR]   symbol:   method getPassword()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[70,18] cannot find symbol
+[ERROR]   symbol:   method getActive()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[75,21] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[76,21] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[77,21] cannot find symbol
+[ERROR]   symbol:   method getRole()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[82,21] cannot find symbol
+[ERROR]   symbol:   method getId()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[83,21] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[84,21] cannot find symbol
+[ERROR]   symbol:   method getFirstName()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[85,21] cannot find symbol
+[ERROR]   symbol:   method getLastName()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[86,21] cannot find symbol
+[ERROR]   symbol:   method getRole()
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[97,38] cannot find symbol
+[ERROR]   symbol:   method getFirstName()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[98,37] cannot find symbol
+[ERROR]   symbol:   method getLastName()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[99,34] cannot find symbol
+[ERROR]   symbol:   method getPhone()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[100,36] cannot find symbol
+[ERROR]   symbol:   method getAddress()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[101,33] cannot find symbol
+[ERROR]   symbol:   method getCity()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[102,34] cannot find symbol
+[ERROR]   symbol:   method getState()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[103,36] cannot find symbol
+[ERROR]   symbol:   method getZipCode()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[104,36] cannot find symbol
+[ERROR]   symbol:   method getCountry()
+[ERROR]   location: variable userDetails of type com.suvida.userservice.model.User
+[ERROR] /C:/Users/Sudheer/suvida_potato/user-service/src/main/java/com/suvida/userservice/service/UserService.java:[105,13] cannot find symbol
+[ERROR]   symbol:   method setUpdatedAt(java.time.LocalDateTime)
+[ERROR]   location: variable user of type com.suvida.userservice.model.User
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+
+These compilation errors are happening because Lombok is not generating the getter and setter methods (getEmail, setPassword, setFirstName, etc.)
+for your User model and DTO classes during compilation. This usually happens when annotation processing isn't enabled or Lombok is missing/misconfigured in your Maven setup.
+<dependency>
+
+            <groupId>org.projectlombok</groupId>
+
+            <artifactId>lombok</artifactId>
+
+            <optional>true</optional>
+
+  </dependency>
+Since the Lombok dependency is already present in your pom.xml, the issue is likely that Lombok's annotation processor isn't binding properly during the Maven build,
+or the compiler needs a clean slate to recognize the generated getters and setters.
+added below build at the end of pom.xml and just above </project>
+<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+then run 
+$ mvn clean compile
+after running it gave below error 
+[ERROR] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.285 s
+[INFO] Finished at: 2026-10-28T22:18:48+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project user-service: Resolution of annotationProcessorPath dependencies failed: Failed to collect dependencies at org.projectlombok:lombok:jar: java.lang.IllegalArgumentException: version can neither be null, empty nor blank -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+
+so changed the pom.xml with below 
+<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+Since it throwing type:uknown error, hardcoded lombok.version and tried and also added <lombok.version>1.18.38</lombok.version> in parent pom.xml <properties>
+
+
+we are getting all these errors because project is running on java 17 but system is on 27.1 java, lets install java 17 and try
+then run:
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Users\user> cd C:\Users\Sudheer\suvida_potato\user-service
+PS C:\Users\user\suvida_potato\user-service> mvn clean compile
+[INFO] Scanning for projects...
+[INFO] Loaded 24277 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO]
+[INFO] ----------------------< com.suvida:user-service >-----------------------
+[INFO] Building User Service 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Loaded 74 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[INFO]
+[INFO] --- clean:3.2.0:clean (default-clean) @ user-service ---
+[INFO] Deleting C:\Users\user\suvida_potato\user-service\target
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ user-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ user-service ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 11 source files with javac [debug parameters release 17] to target\classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.922 s
+[INFO] Finished at: 2026-10-28T22:39:00+05:30
+[INFO] ------------------------------------------------------------------------
+PS C:\Users\user\suvida_potato\user-service> mvn spring-boot:run
+
+Now product-serive
+PS C:\Users\user> cd C:\Users\user\suvida_potato\product-service
+PS C:\Users\user\suvida_potato\product-service> mvn spring-boot:run
+
+Now cart-service
+PS C:\Users\user> cd C:\Users\user\suvida_potato\cart-service
+PS C:\Users\user\suvida_potato\cart-service> mvn spring-boot:run
+Now order-service
+PS C:\Users\user> cd C:\Users\user\suvida_potato\order-service
+PS C:\Users\user\suvida_potato\order-service> mvn spring-boot:run
+Now payment-serice
+PS C:\Users\user> cd C:\Users\user\suvida_potato\payment-service
+PS C:\Users\user\suvida_potato\payment-service> mvn spring-boot:run
+
+Instances currently registered with Eureka
+Application	AMIs	Availability Zones	Status
+API-GATEWAY	n/a (1)	(1)	UP (1) - DESKTOP:api-gateway:8080
+CART-SERVICE	n/a (1)	(1)	UP (1) - DESKTOP:cart-service:8083
+ORDER-SERVICE	n/a (1)	(1)	UP (1) - DESKTOP:order-service:8084
+PAYMENT-SERVICE	n/a (1)	(1)	UP (1) - DESKTOP:payment-service:8085
+PRODUCT-SERVICE	n/a (1)	(1)	UP (1) - DESKTOP:product-service:8082
+USER-SERVICE	n/a (1)	(1)	UP (1) - DESKTOP:user-service:8081
+
+Now go to front end
+$ cd C:\Users\user\suvida_potato\frontend
+$ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+$ npm install
+$ npm run dev
+
+Get-NetTCPConnection -LocalPort 5432, 6379 -ErrorAction SilentlyContinue # to check port 
+after checking everything, to stop and clean all :
+ctrl c and mvn clean for each service
+for front end ctrl c
 
 
 
