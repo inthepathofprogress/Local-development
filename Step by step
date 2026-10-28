@@ -1,0 +1,148 @@
+Intallations:
+  Java
+  Maven ( choclatey for maven )
+
+
+
+
+Java:
+https://www.oracle.com/in/java/technologies/downloads/#jdk27-windows - X64 installer 
+$ java -version
+java version "27.0.1.0.3" 2026-10-25
+Java(TM) SE Runtime Environment (build 27.0.1.0.3+1-2)
+Java HotSpot(TM) 64-Bit Server VM (build 27.0.1.0.3+1-2, mixed mode, sharing)
+
+Chocolate to install maven
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+                                                                                                                        PS C:\WINDOWS\system32> Set-ExecutionPolicy AllSigned                                                                   >> # Or: Set-ExecutionPolicy Bypass -Scope Process                                                                      >> Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))                                                                                          >>
+
+Execution Policy Change
+The execution policy helps protect you from scripts that you do not trust. Changing the execution policy might expose
+you to the security risks described in the about_Execution_Policies help topic at
+https:/go.microsoft.com/fwlink/?LinkID=135170. Do you want to change the execution policy?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): A
+Forcing web requests to allow TLS v1.2 (Required for requests to Chocolatey.org)
+Getting latest version of the Chocolatey package for download.
+Not using proxy.
+Getting Chocolatey from https://community.chocolatey.org/api/v2/package/chocolatey/2.7.5.
+Downloading https://community.chocolatey.org/api/v2/package/chocolatey/2.7.5 to C:\Users\Sudheer\AppData\Local\Temp\chocolatey\chocoInstall\chocolatey.zip
+Not using proxy.
+Extracting C:\Users\Sudheer\AppData\Local\Temp\chocolatey\chocoInstall\chocolatey.zip to C:\Users\Sudheer\AppData\Local\Temp\chocolatey\chocoInstall
+Installing Chocolatey on the local machine
+Creating ChocolateyInstall as an environment variable (targeting 'Machine')
+  Setting ChocolateyInstall to 'C:\ProgramData\chocolatey'
+WARNING: It's very likely you will need to close and reopen your shell
+  before you can use choco.
+Restricting write permissions to Administrators
+We are setting up the Chocolatey package repository.
+The packages themselves go to 'C:\ProgramData\chocolatey\lib'
+  (i.e. C:\ProgramData\chocolatey\lib\yourPackageName).
+A shim file for the command line goes to 'C:\ProgramData\chocolatey\bin'
+  and points to an executable in 'C:\ProgramData\chocolatey\lib\yourPackageName'.
+
+Creating Chocolatey CLI folders if they do not already exist.
+
+chocolatey.nupkg file not installed in lib.
+ Attempting to locate it from bootstrapper.
+PATH environment variable does not have C:\ProgramData\chocolatey\bin in it. Adding...
+WARNING: Not setting tab completion: Profile file does not exist at
+'C:\Users\Sudheer\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1'.
+Chocolatey CLI (choco.exe) is now ready.
+You can call choco from anywhere, command line or PowerShell by typing choco.
+Run choco /? for a list of functions.
+You may need to shut dowSet-ExecutionPolicy AllSignedor consoles
+>> # Or: Set-Execution> history
+                                                  e; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.Se
+  Id CommandLine
+  -- -----------
+   1 Set-ExecutionPolicy AllSigned...
+
+
+PS C:\WINDOWS\system32> choco
+Chocolatey v2.7.5
+Please run 'choco --help' or 'choco <command> --help' for help menu.
+PS C:\WINDOWS\system32>
+
+
+Install maven
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\WINDOWS\system32> choco
+Chocolatey v2.7.5
+Please run 'choco --help' or 'choco <command> --help' for help menu.
+PS C:\WINDOWS\system32> choco install maven
+Chocolatey v2.7.5
+3 validations performed. 2 success(es), 1 warning(s), and 0 error(s).
+
+Validation Warnings:
+ - A pending system reboot request has been detected, however, this is
+   being ignored due to the current Chocolatey configuration.  If you
+   want to halt when this occurs, then either set the global feature
+   using:
+     choco feature enable --name="exitOnRebootDetected"
+   or pass the option --exit-when-reboot-detected.
+
+Installing the following packages:
+maven
+By installing, you accept licenses for the packages.
+Downloading package from source 'https://community.chocolatey.org/api/v2/'
+
+maven v3.10.0 [Approved]
+maven package files install completed. Performing other installation steps.
+The package maven wants to run 'chocolateyinstall.ps1'.
+Note: If you don't run this script, the installation will fail.
+Note: To confirm automatically next time, use '-y' or consider:
+choco feature enable -n allowGlobalConfirmation
+Do you want to run the script?([Y]es/[A]ll scripts/[N]o/[P]rint): Y
+
+C:\Users\user\.m2
+PATH environment variable does not have C:\ProgramData\chocolatey\lib\maven\apache-maven-3.10.0\bin in it. Adding...
+Environment Vars (like PATH) have changed. Close/reopen your shell to
+ see the changes (or in powershell/cmd.exe just type `refreshenv`).
+ The install of maven was successful.
+  Deployed to 'C:\ProgramData\chocolatey\lib\maven\apache-maven-3.10.0'
+
+Chocolatey installed 1/1 packages.
+ See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log)
+
+PS C:\WINDOWS\system32> mvn -version
+
+mvn : The term 'mvn' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the
+
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+
+At line:1 char:1
+
++ mvn -version
+
++ ~~~
+
+    + CategoryInfo          : ObjectNotFound: (mvn:String) [], CommandNotFoundException
+
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+
+# After installing maven close the tab to check mvn -version  otherwise it will throw an error
+
+
+Install Node.js 
+https://nodejs.org/en/download
+C:\Users\user>node
+Welcome to Node.js v24.22.1.
+Type ".help" for more information.
+>
+
+Postgresql installation
+https://www.postgresql.org/download/windows/
+https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+installed postgres given username and password and port default 5432
+
+
+
+
+
+
+
+
